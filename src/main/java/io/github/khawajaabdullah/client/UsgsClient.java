@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah.client;
 
-import io.github.khawajaabdullah.dto.FeatureCollection;
+import io.github.khawajaabdullah.dto.usgs.FeatureCollection;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;

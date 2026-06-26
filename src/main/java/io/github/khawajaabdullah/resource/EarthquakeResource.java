@@ -1,10 +1,9 @@
 package io.github.khawajaabdullah.resource;
 
 import io.github.khawajaabdullah.client.UsgsClient;
-import io.github.khawajaabdullah.dto.FeatureCollection;
-import io.github.khawajaabdullah.entity.EarthquakeEntity;
-import io.github.khawajaabdullah.repository.EarthquakeRepository;
-import io.github.khawajaabdullah.util.Constant;
+import io.github.khawajaabdullah.dto.response.EarthquakeResponse;
+import io.github.khawajaabdullah.dto.usgs.FeatureCollection;
+import io.github.khawajaabdullah.service.EarthquakeService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -20,9 +19,8 @@ public class EarthquakeResource {
 
   @RestClient
   UsgsClient usgsClient;
-
   @Inject
-  EarthquakeRepository earthquakeRepository;
+  EarthquakeService earthquakeService;
 
   @GET
   @Path("/{feedType}")
@@ -33,8 +31,8 @@ public class EarthquakeResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public List<EarthquakeEntity> list() {
-    return earthquakeRepository.listAll();
+  public List<EarthquakeResponse> listAll() {
+    return earthquakeService.listAll();
   }
 
 }

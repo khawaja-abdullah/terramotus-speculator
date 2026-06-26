@@ -1,4 +1,4 @@
-package io.github.khawajaabdullah.dto;
+package io.github.khawajaabdullah.dto.usgs;
 
 public record Properties(double mag, String place, long time, long updated, String tz, String url, String detail,
                          int felt, double cdi, double mmi, String alert, String status, int tsunami, int sig,

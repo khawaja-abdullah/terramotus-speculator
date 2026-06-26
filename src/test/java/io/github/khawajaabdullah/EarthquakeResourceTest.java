@@ -1,7 +1,7 @@
 package io.github.khawajaabdullah;
 
-import io.github.khawajaabdullah.dto.FeatureCollection;
-import io.github.khawajaabdullah.entity.EarthquakeEntity;
+import io.github.khawajaabdullah.dto.response.EarthquakeResponse;
+import io.github.khawajaabdullah.dto.usgs.FeatureCollection;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.common.mapper.TypeRef;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -29,7 +29,7 @@ class EarthquakeResourceTest {
         .when().get("/earthquakes")
         .then()
         .statusCode(RestResponse.StatusCode.OK)
-        .extract().as(new TypeRef<List<EarthquakeEntity>>() {
+        .extract().as(new TypeRef<List<EarthquakeResponse>>() {
         });
   }
 

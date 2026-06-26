@@ -1,4 +1,4 @@
-package io.github.khawajaabdullah.dto;
+package io.github.khawajaabdullah.dto.usgs;
 
 import java.util.List;
 
