@@ -7,7 +7,6 @@ import io.github.khawajaabdullah.repository.EarthquakeRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -22,13 +21,12 @@ public class EarthquakeService {
     this.earthquakeRepository = earthquakeRepository;
   }
 
-  @Transactional
   public void persistBatch(List<EarthquakeRecord> earthquakeRecords) {
     List<EarthquakeEntity> earthquakeEntities = earthquakeRecords
         .stream()
         .map(earthquakeMapper::mapEarthquakeDtoToEntity)
         .toList();
-    earthquakeRepository.nativePersistBatch(earthquakeEntities);
+    earthquakeRepository.upsertMultiple(earthquakeEntities);
   }
 
   public List<EarthquakeRecord> findAll(Integer pageNumber, Integer pageSize) {
