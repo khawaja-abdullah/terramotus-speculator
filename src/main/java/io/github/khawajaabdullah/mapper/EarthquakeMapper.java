@@ -8,7 +8,6 @@ import io.github.khawajaabdullah.util.Constant;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 
 @ApplicationScoped
 public class EarthquakeMapper {

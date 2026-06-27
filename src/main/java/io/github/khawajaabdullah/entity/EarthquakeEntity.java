@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,9 +30,17 @@ public class EarthquakeEntity {
     return new EarthquakeEntity();
   }
 
+  public String getId() {
+    return id;
+  }
+
   public EarthquakeEntity setId(String id) {
     this.id = id;
     return this;
+  }
+
+  public LocalDateTime getLastUpdate() {
+    return lastUpdate;
   }
 
   public EarthquakeEntity setLastUpdate(LocalDateTime lastUpdate) {
@@ -41,9 +48,17 @@ public class EarthquakeEntity {
     return this;
   }
 
+  public LocalDateTime getTime() {
+    return time;
+  }
+
   public EarthquakeEntity setTime(LocalDateTime time) {
     this.time = time;
     return this;
+  }
+
+  public String getFlynnRegion() {
+    return flynnRegion;
   }
 
   public EarthquakeEntity setFlynnRegion(String flynnRegion) {
@@ -51,9 +66,17 @@ public class EarthquakeEntity {
     return this;
   }
 
+  public double getLatitude() {
+    return latitude;
+  }
+
   public EarthquakeEntity setLatitude(double latitude) {
     this.latitude = latitude;
     return this;
+  }
+
+  public double getLongitude() {
+    return longitude;
   }
 
   public EarthquakeEntity setLongitude(double longitude) {
@@ -61,46 +84,22 @@ public class EarthquakeEntity {
     return this;
   }
 
+  public double getDepth() {
+    return depth;
+  }
+
   public EarthquakeEntity setDepth(double depth) {
     this.depth = depth;
     return this;
   }
 
+  public double getMagnitude() {
+    return magnitude;
+  }
+
   public EarthquakeEntity setMagnitude(double magnitude) {
     this.magnitude = magnitude;
     return this;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public LocalDateTime getLastUpdate() {
-    return lastUpdate;
-  }
-
-  public LocalDateTime getTime() {
-    return time;
-  }
-
-  public String getFlynnRegion() {
-    return flynnRegion;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public double getDepth() {
-    return depth;
-  }
-
-  public double getMagnitude() {
-    return magnitude;
   }
 
 }
