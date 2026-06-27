@@ -1,45 +1,38 @@
 package io.github.khawajaabdullah.mapper;
 
 import io.github.khawajaabdullah.dto.response.EarthquakeResponse;
-import io.github.khawajaabdullah.dto.usgs.Feature;
-import io.github.khawajaabdullah.dto.usgs.Geometry;
-import io.github.khawajaabdullah.dto.usgs.Properties;
+import io.github.khawajaabdullah.dto.seismicportal.Feature;
+import io.github.khawajaabdullah.dto.seismicportal.Properties;
 import io.github.khawajaabdullah.entity.EarthquakeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
-
-import java.util.List;
 
 @ApplicationScoped
 public class EarthquakeMapper {
 
   public EarthquakeEntity mapFeatureToEarthquakeEntity(Feature feature) {
     Properties properties = feature.properties();
-    Geometry geometry = feature.geometry();
-    List<Double> coordinates = geometry.coordinates();
     return new EarthquakeEntity(
         feature.id(),
-        properties.mag(),
-        properties.place(),
+        properties.lastUpdate(),
         properties.time(),
-        properties.updated(),
-        properties.status(),
-        coordinates.get(0),
-        coordinates.get(1),
-        coordinates.get(2)
+        properties.flynnRegion(),
+        properties.latitude(),
+        properties.longitude(),
+        properties.depth(),
+        properties.magnitude()
     );
   }
 
   public EarthquakeResponse mapEarthquakeEntityToResponse(EarthquakeEntity earthquakeEntity) {
     return new EarthquakeResponse(
         earthquakeEntity.getId(),
-        earthquakeEntity.getMagnitude(),
-        earthquakeEntity.getPlace(),
+        earthquakeEntity.getLastUpdate(),
         earthquakeEntity.getTime(),
-        earthquakeEntity.getUpdated(),
-        earthquakeEntity.getStatus(),
-        earthquakeEntity.getLongitude(),
+        earthquakeEntity.getFlynnRegion(),
         earthquakeEntity.getLatitude(),
-        earthquakeEntity.getDepth()
+        earthquakeEntity.getLongitude(),
+        earthquakeEntity.getDepth(),
+        earthquakeEntity.getMagnitude()
     );
   }
 

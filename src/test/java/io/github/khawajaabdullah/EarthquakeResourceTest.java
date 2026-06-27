@@ -1,7 +1,7 @@
 package io.github.khawajaabdullah;
 
 import io.github.khawajaabdullah.dto.response.EarthquakeResponse;
-import io.github.khawajaabdullah.dto.usgs.FeatureCollection;
+import io.github.khawajaabdullah.dto.seismicportal.FeatureCollection;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.common.mapper.TypeRef;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -15,16 +15,16 @@ import static io.restassured.RestAssured.given;
 class EarthquakeResourceTest {
 
   @Test
-  void shouldListEarthquakesByFeedType() {
+  void shouldGetHistoricalEarthquakeEvents() {
     given()
-        .when().get("/earthquakes/all_hour.geojson")
+        .when().get("/earthquakes/historical?format=json&limit=10")
         .then()
         .statusCode(RestResponse.StatusCode.OK)
         .extract().as(FeatureCollection.class);
   }
 
   @Test
-  void shouldListEarthquakes() {
+  void shouldFindAllEarthquakes() {
     given()
         .when().get("/earthquakes")
         .then()
@@ -34,7 +34,7 @@ class EarthquakeResourceTest {
   }
 
   @Test
-  void shouldListEarthquakesPaginated() {
+  void shouldFindAllEarthquakesPaginated() {
     given()
         .when().get("/earthquakes?pageNumber=0&pageSize=10")
         .then()

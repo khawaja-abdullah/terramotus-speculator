@@ -1,4 +1,4 @@
-package io.github.khawajaabdullah.client;
+package io.github.khawajaabdullah.client.seismicportal;
 
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.websockets.next.*;

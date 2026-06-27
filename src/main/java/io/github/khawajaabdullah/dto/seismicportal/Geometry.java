@@ -1,4 +1,4 @@
-package io.github.khawajaabdullah.dto.usgs;
+package io.github.khawajaabdullah.dto.seismicportal;
 
 import java.util.List;
 
