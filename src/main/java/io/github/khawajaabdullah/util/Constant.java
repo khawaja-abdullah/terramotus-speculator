@@ -5,6 +5,6 @@ public final class Constant {
   private Constant() {
   }
 
-  public static final String EARTHQUAKE_FEED_TYPE_ALL_HOUR = "all_hour.geojson";
+  public static final String SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON = "json";
 
 }

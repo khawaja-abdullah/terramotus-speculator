@@ -1,5 +1,6 @@
 package io.github.khawajaabdullah.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,27 +11,61 @@ public class EarthquakeEntity {
 
   @Id
   private String id;
+  @Column(name = "last_update")
   private String lastUpdate;
   private String time;
+  @Column(name = "flynn_region")
   private String flynnRegion;
   private double latitude;
   private double longitude;
   private double depth;
   private double magnitude;
 
-  public EarthquakeEntity() {
+  private EarthquakeEntity() {
   }
 
-  public EarthquakeEntity(String id, String lastUpdate, String time, String flynnRegion, double latitude,
-                          double longitude, double depth, double magnitude) {
+  public static EarthquakeEntity newBuilder() {
+    return new EarthquakeEntity();
+  }
+
+  public EarthquakeEntity setId(String id) {
     this.id = id;
+    return this;
+  }
+
+  public EarthquakeEntity setLastUpdate(String lastUpdate) {
     this.lastUpdate = lastUpdate;
+    return this;
+  }
+
+  public EarthquakeEntity setTime(String time) {
     this.time = time;
+    return this;
+  }
+
+  public EarthquakeEntity setFlynnRegion(String flynnRegion) {
     this.flynnRegion = flynnRegion;
+    return this;
+  }
+
+  public EarthquakeEntity setLatitude(double latitude) {
     this.latitude = latitude;
+    return this;
+  }
+
+  public EarthquakeEntity setLongitude(double longitude) {
     this.longitude = longitude;
+    return this;
+  }
+
+  public EarthquakeEntity setDepth(double depth) {
     this.depth = depth;
+    return this;
+  }
+
+  public EarthquakeEntity setMagnitude(double magnitude) {
     this.magnitude = magnitude;
+    return this;
   }
 
   public String getId() {

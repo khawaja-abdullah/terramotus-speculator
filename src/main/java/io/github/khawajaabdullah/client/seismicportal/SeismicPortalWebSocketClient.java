@@ -4,7 +4,6 @@ import io.quarkus.runtime.StartupEvent;
 import io.quarkus.websockets.next.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import java.net.URI;
@@ -15,8 +14,11 @@ public class SeismicPortalWebSocketClient {
 
   private static final Logger LOGGER = Logger.getLogger(SeismicPortalWebSocketClient.class);
 
-  @Inject
-  WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector;
+  private final WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector;
+
+  public SeismicPortalWebSocketClient(WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector) {
+    this.seismicPortalWebSocketClientWebSocketConnector = seismicPortalWebSocketClientWebSocketConnector;
+  }
 
   void onStart(@Observes StartupEvent startupEvent) {
     connect();

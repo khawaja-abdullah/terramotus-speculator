@@ -24,5 +24,4 @@ public interface SeismicPortalClient {
                                         @QueryParam("maxradius") Double maxRadius
   );
 
-
 }

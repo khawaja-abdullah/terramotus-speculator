@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah.mapper;
 
-import io.github.khawajaabdullah.dto.response.EarthquakeResponse;
+import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
 import io.github.khawajaabdullah.dto.seismicportal.Feature;
 import io.github.khawajaabdullah.dto.seismicportal.Properties;
 import io.github.khawajaabdullah.entity.EarthquakeEntity;
@@ -9,9 +9,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class EarthquakeMapper {
 
-  public EarthquakeEntity mapFeatureToEarthquakeEntity(Feature feature) {
+  public EarthquakeRecord mapFeatureToEarthquakeDto(Feature feature) {
     Properties properties = feature.properties();
-    return new EarthquakeEntity(
+    return new EarthquakeRecord(
         feature.id(),
         properties.lastUpdate(),
         properties.time(),
@@ -23,8 +23,20 @@ public class EarthquakeMapper {
     );
   }
 
-  public EarthquakeResponse mapEarthquakeEntityToResponse(EarthquakeEntity earthquakeEntity) {
-    return new EarthquakeResponse(
+  public EarthquakeEntity mapEarthquakeDtoToEntity(EarthquakeRecord earthquakeRecord) {
+    return EarthquakeEntity.newBuilder()
+        .setId(earthquakeRecord.id())
+        .setLastUpdate(earthquakeRecord.lastUpdate())
+        .setTime(earthquakeRecord.time())
+        .setFlynnRegion(earthquakeRecord.flynnRegion())
+        .setLatitude(earthquakeRecord.latitude())
+        .setLongitude(earthquakeRecord.longitude())
+        .setDepth(earthquakeRecord.depth())
+        .setMagnitude(earthquakeRecord.magnitude());
+  }
+
+  public EarthquakeRecord mapEarthquakeEntityToDto(EarthquakeEntity earthquakeEntity) {
+    return new EarthquakeRecord(
         earthquakeEntity.getId(),
         earthquakeEntity.getLastUpdate(),
         earthquakeEntity.getTime(),
