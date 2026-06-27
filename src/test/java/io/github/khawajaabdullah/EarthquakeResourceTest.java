@@ -33,4 +33,14 @@ class EarthquakeResourceTest {
         });
   }
 
+  @Test
+  void shouldListEarthquakesPaginated() {
+    given()
+        .when().get("/earthquakes?pageNumber=0&pageSize=10")
+        .then()
+        .statusCode(RestResponse.StatusCode.OK)
+        .extract().as(new TypeRef<List<EarthquakeResponse>>() {
+        });
+  }
+
 }
