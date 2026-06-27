@@ -1,10 +1,17 @@
 package io.github.khawajaabdullah.util;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+
 public final class Constant {
+
+  public static final String SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON = "json";
+  public static final DateTimeFormatter ISO_ZULU_FORMATTER = new DateTimeFormatterBuilder()
+      .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+      .appendLiteral('Z')
+      .toFormatter();
 
   private Constant() {
   }
-
-  public static final String SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON = "json";
 
 }

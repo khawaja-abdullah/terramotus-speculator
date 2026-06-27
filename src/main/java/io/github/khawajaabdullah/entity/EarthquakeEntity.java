@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "earthquake")
 public class EarthquakeEntity {
@@ -12,8 +15,8 @@ public class EarthquakeEntity {
   @Id
   private String id;
   @Column(name = "last_update")
-  private String lastUpdate;
-  private String time;
+  private LocalDateTime lastUpdate;
+  private LocalDateTime time;
   @Column(name = "flynn_region")
   private String flynnRegion;
   private double latitude;
@@ -33,12 +36,12 @@ public class EarthquakeEntity {
     return this;
   }
 
-  public EarthquakeEntity setLastUpdate(String lastUpdate) {
+  public EarthquakeEntity setLastUpdate(LocalDateTime lastUpdate) {
     this.lastUpdate = lastUpdate;
     return this;
   }
 
-  public EarthquakeEntity setTime(String time) {
+  public EarthquakeEntity setTime(LocalDateTime time) {
     this.time = time;
     return this;
   }
@@ -72,11 +75,11 @@ public class EarthquakeEntity {
     return id;
   }
 
-  public String getLastUpdate() {
+  public LocalDateTime getLastUpdate() {
     return lastUpdate;
   }
 
-  public String getTime() {
+  public LocalDateTime getTime() {
     return time;
   }
 
