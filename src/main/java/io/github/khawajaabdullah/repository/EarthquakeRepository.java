@@ -18,6 +18,11 @@ public class EarthquakeRepository implements PanacheRepositoryBase<EarthquakeEnt
   }
 
   @Transactional
+  public void upsert(EarthquakeEntity entities) {
+    statelessSession.upsert(entities);
+  }
+
+  @Transactional
   public void upsertMultiple(List<EarthquakeEntity> entities) {
     statelessSession.upsertMultiple(entities);
   }

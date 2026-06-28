@@ -7,11 +7,15 @@ import io.github.khawajaabdullah.repository.EarthquakeRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class EarthquakeService {
+
+  private static final Logger LOGGER = Logger.getLogger(EarthquakeService.class);
 
   private final EarthquakeMapper earthquakeMapper;
   private final EarthquakeRepository earthquakeRepository;
@@ -21,12 +25,21 @@ public class EarthquakeService {
     this.earthquakeRepository = earthquakeRepository;
   }
 
-  public void persistBatch(List<EarthquakeRecord> earthquakeRecords) {
-    List<EarthquakeEntity> earthquakeEntities = earthquakeRecords
-        .stream()
+  public void upsert(EarthquakeRecord earthquakeRecord) {
+    EarthquakeEntity earthquakeEntity = earthquakeMapper.mapEarthquakeDtoToEntity(earthquakeRecord);
+    earthquakeRepository.upsert(earthquakeEntity);
+    LOGGER.infof("Upserted earthquake with id: %s", earthquakeEntity.getId());
+  }
+
+  public void upsertMultiple(List<EarthquakeRecord> earthquakeRecords) {
+    List<EarthquakeEntity> earthquakeEntities = earthquakeRecords.stream()
         .map(earthquakeMapper::mapEarthquakeDtoToEntity)
         .toList();
     earthquakeRepository.upsertMultiple(earthquakeEntities);
+    String upsertedIds = earthquakeEntities.stream()
+        .map(EarthquakeEntity::getId)
+        .collect(Collectors.joining(","));
+    LOGGER.infof("Upserted %s earthquakes with idx: %s", earthquakeEntities.size(), upsertedIds);
   }
 
   public List<EarthquakeRecord> findAll(Integer pageNumber, Integer pageSize) {
