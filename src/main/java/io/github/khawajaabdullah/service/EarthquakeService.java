@@ -3,6 +3,7 @@ package io.github.khawajaabdullah.service;
 import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
 import io.smallrye.mutiny.Multi;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EarthquakeService {
@@ -11,7 +12,7 @@ public interface EarthquakeService {
 
   void upsertMultiple(List<EarthquakeRecord> earthquakeRecords);
 
-  List<EarthquakeRecord> findAll(Integer pageNumber, Integer pageSize);
+  List<EarthquakeRecord> getAll(LocalDateTime startTime, LocalDateTime endTime, Integer pageNumber, Integer pageSize);
 
   List<EarthquakeRecord> getHistoricalEvents(String start, String end);
 
@@ -20,6 +21,6 @@ public interface EarthquakeService {
 
   void broadcastLiveEvent(EarthquakeRecord earthquakeRecord);
 
-  Multi<EarthquakeRecord> getLiveStream();
+  Multi<EarthquakeRecord> getLiveEvents();
 
 }

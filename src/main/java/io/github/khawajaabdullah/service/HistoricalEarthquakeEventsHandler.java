@@ -21,7 +21,6 @@ public class HistoricalEarthquakeEventsHandler {
     this.earthquakeService = earthquakeService;
   }
 
-  // TODO: implement last successful sync timestamp watermark + configurable delta window
   @Scheduled(every = "4h")
   void syncRecentEvents() {
     LOGGER.info("Polling earthquake events...");

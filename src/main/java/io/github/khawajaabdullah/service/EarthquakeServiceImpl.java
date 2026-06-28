@@ -7,6 +7,7 @@ import io.github.khawajaabdullah.entity.EarthquakeEntity;
 import io.github.khawajaabdullah.mapper.EarthquakeMapper;
 import io.github.khawajaabdullah.repository.EarthquakeRepository;
 import io.github.khawajaabdullah.util.Constant;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Multi;
@@ -15,6 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,28 +57,25 @@ public class EarthquakeServiceImpl implements EarthquakeService {
   }
 
   @Override
-  public List<EarthquakeRecord> findAll(Integer pageNumber, Integer pageSize) {
-    if (pageNumber == null && pageSize == null) {
-      return findAll();
-    } else if (pageNumber == null) {
-      return findAll(0, pageSize.intValue());
-    } else if (pageSize == null) {
-      return findAll(pageNumber.intValue(), 10);
+  public List<EarthquakeRecord> getAll(LocalDateTime startTime, LocalDateTime endTime, Integer pageNumber, Integer pageSize) {
+    PanacheQuery<EarthquakeEntity> earthquakeEntityPanacheQuery;
+    if (startTime != null && endTime != null) {
+      earthquakeEntityPanacheQuery = earthquakeRepository.find("time BETWEEN ?1 AND ?2", Sort.descending("time"), startTime, endTime);
+    } else if (startTime != null) {
+      earthquakeEntityPanacheQuery = earthquakeRepository.find("time >= ?1", Sort.descending("time"), startTime);
+    } else if (endTime != null) {
+      earthquakeEntityPanacheQuery = earthquakeRepository.find("time <= ?1", Sort.descending("time"), endTime);
     } else {
-      return findAll(pageNumber.intValue(), pageSize.intValue());
+      earthquakeEntityPanacheQuery = earthquakeRepository.findAll(Sort.descending("time"));
     }
-  }
-
-  private List<EarthquakeRecord> findAll() {
-    return earthquakeRepository.findAll(Sort.descending("time"))
-        .stream()
-        .map(earthquakeMapper::mapEarthquakeEntityToDto)
-        .toList();
-  }
-
-  private List<EarthquakeRecord> findAll(int pageNumber, int pageSize) {
-    return earthquakeRepository.findAll(Sort.descending("time"))
-        .page(Page.of(pageNumber, pageSize))
+    if (pageNumber != null && pageSize != null) {
+      earthquakeEntityPanacheQuery = earthquakeEntityPanacheQuery.page(Page.of(pageNumber, pageSize));
+    } else if (pageNumber != null) {
+      earthquakeEntityPanacheQuery = earthquakeEntityPanacheQuery.page(Page.of(pageNumber, 10));
+    } else if (pageSize != null) {
+      earthquakeEntityPanacheQuery = earthquakeEntityPanacheQuery.page(Page.of(0, pageSize));
+    }
+    return earthquakeEntityPanacheQuery.list()
         .stream()
         .map(earthquakeMapper::mapEarthquakeEntityToDto)
         .toList();
@@ -98,11 +97,13 @@ public class EarthquakeServiceImpl implements EarthquakeService {
         .toList();
   }
 
+  @Override
   public void broadcastLiveEvent(EarthquakeRecord earthquakeRecord) {
     earthquakeRecordBroadcastProcessor.onNext(earthquakeRecord);
   }
 
-  public Multi<EarthquakeRecord> getLiveStream() {
+  @Override
+  public Multi<EarthquakeRecord> getLiveEvents() {
     return earthquakeRecordBroadcastProcessor;
   }
 

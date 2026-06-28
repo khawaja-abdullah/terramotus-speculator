@@ -7,6 +7,7 @@ import io.smallrye.mutiny.Multi;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Path("/earthquakes")
@@ -37,15 +38,18 @@ public class EarthquakeResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public List<EarthquakeRecord> findAll(@QueryParam("pageNumber") Integer pageNumber, @QueryParam("pageSize") Integer pageSize) {
-    return earthquakeService.findAll(pageNumber, pageSize);
+  public List<EarthquakeRecord> getAll(@QueryParam("startTime") LocalDateTime startTime,
+                                       @QueryParam("endTime") LocalDateTime endTime,
+                                       @QueryParam("pageNumber") Integer pageNumber,
+                                       @QueryParam("pageSize") Integer pageSize) {
+    return earthquakeService.getAll(startTime, endTime, pageNumber, pageSize);
   }
 
   @GET
   @Path("/live")
   @Produces(MediaType.SERVER_SENT_EVENTS)
-  public Multi<EarthquakeRecord> getLiveStream() {
-    return earthquakeService.getLiveStream();
+  public Multi<EarthquakeRecord> getLiveEvents() {
+    return earthquakeService.getLiveEvents();
   }
 
 }
