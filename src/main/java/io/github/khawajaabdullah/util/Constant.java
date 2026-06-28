@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatterBuilder;
 public final class Constant {
 
   public static final String SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON = "json";
-  public static final DateTimeFormatter ISO_ZULU_FORMATTER = new DateTimeFormatterBuilder()
+  public static final DateTimeFormatter ISO_ZULU_LOCAL_DATE_TIME = new DateTimeFormatterBuilder()
       .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
       .appendLiteral('Z')
       .toFormatter();

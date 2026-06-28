@@ -41,8 +41,8 @@ public class EarthquakeMapper {
   public EarthquakeRecord mapEarthquakeEntityToDto(EarthquakeEntity earthquakeEntity) {
     return new EarthquakeRecord(
         earthquakeEntity.getId(),
-        earthquakeEntity.getLastUpdate().format(Constant.ISO_ZULU_FORMATTER),
-        earthquakeEntity.getTime().format(Constant.ISO_ZULU_FORMATTER),
+        earthquakeEntity.getLastUpdate().format(Constant.ISO_ZULU_LOCAL_DATE_TIME),
+        earthquakeEntity.getTime().format(Constant.ISO_ZULU_LOCAL_DATE_TIME),
         earthquakeEntity.getFlynnRegion(),
         earthquakeEntity.getLatitude(),
         earthquakeEntity.getLongitude(),

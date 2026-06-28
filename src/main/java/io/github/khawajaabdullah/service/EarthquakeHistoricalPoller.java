@@ -1,6 +1,7 @@
 package io.github.khawajaabdullah.service;
 
 import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.util.Constant;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logging.Logger;
@@ -26,7 +27,10 @@ public class EarthquakeHistoricalPoller {
   void syncRecentEvents() {
     LOGGER.info("Polling earthquake events...");
     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    List<EarthquakeRecord> earthquakeRecords = seismicPortalService.getHistoricalEvents(now.minusHours(5).toString(), now.toString());
+    List<EarthquakeRecord> earthquakeRecords = seismicPortalService.getHistoricalEvents(
+        now.minusHours(5).format(Constant.ISO_ZULU_LOCAL_DATE_TIME),
+        now.format(Constant.ISO_ZULU_LOCAL_DATE_TIME)
+    );
     LOGGER.infof("Polled %d earthquake events", earthquakeRecords.size());
     earthquakeService.upsertMultiple(earthquakeRecords);
   }
