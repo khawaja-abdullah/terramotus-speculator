@@ -20,7 +20,7 @@ public class SeismicPortalWebSocketClient {
   @OnTextMessage
   void onTextMessage(FeatureMessage featureMessage) {
     LOGGER.infof("Message received from Seismic Portal socket: %s", featureMessage);
-    liveEarthquakeEventsHandler.persistAndBroadcast(featureMessage);
+    liveEarthquakeEventsHandler.handle(featureMessage);
   }
 
 }

@@ -22,7 +22,7 @@ public class HistoricalEarthquakeEventsHandler {
   }
 
   @Scheduled(every = "4h")
-  void syncRecentEvents() {
+  void syncHistoricalEvents() {
     LOGGER.info("Polling earthquake events...");
     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
     List<EarthquakeRecord> earthquakeRecords = earthquakeService.getHistoricalEvents(

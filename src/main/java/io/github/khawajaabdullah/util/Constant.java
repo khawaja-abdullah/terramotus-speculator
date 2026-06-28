@@ -10,6 +10,7 @@ public final class Constant {
       .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
       .appendLiteral('Z')
       .toFormatter();
+  public static final String FEATURE_MESSAGE_ACTION_CREATE = "create";
 
   private Constant() {
   }
