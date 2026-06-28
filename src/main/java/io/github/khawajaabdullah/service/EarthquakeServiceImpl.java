@@ -9,6 +9,8 @@ import io.github.khawajaabdullah.repository.EarthquakeRepository;
 import io.github.khawajaabdullah.util.Constant;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -24,6 +26,7 @@ public class EarthquakeServiceImpl implements EarthquakeService {
   private final EarthquakeMapper earthquakeMapper;
   private final EarthquakeRepository earthquakeRepository;
   private final SeismicPortalRestClient seismicPortalRestClient;
+  private final BroadcastProcessor<EarthquakeRecord> earthquakeRecordBroadcastProcessor = BroadcastProcessor.create();
 
   public EarthquakeServiceImpl(EarthquakeMapper earthquakeMapper, EarthquakeRepository earthquakeRepository,
                                @RestClient SeismicPortalRestClient seismicPortalRestClient) {
@@ -93,6 +96,14 @@ public class EarthquakeServiceImpl implements EarthquakeService {
         .stream()
         .map(earthquakeMapper::mapFeatureToEarthquakeDto)
         .toList();
+  }
+
+  public void broadcastLiveEvent(EarthquakeRecord earthquakeRecord) {
+    earthquakeRecordBroadcastProcessor.onNext(earthquakeRecord);
+  }
+
+  public Multi<EarthquakeRecord> getLiveStream() {
+    return earthquakeRecordBroadcastProcessor;
   }
 
 }

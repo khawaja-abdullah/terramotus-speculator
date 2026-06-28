@@ -1,6 +1,7 @@
 package io.github.khawajaabdullah.service;
 
 import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.smallrye.mutiny.Multi;
 
 import java.util.List;
 
@@ -16,4 +17,9 @@ public interface EarthquakeService {
 
   List<EarthquakeRecord> getHistoricalEvents(String format, String start, String end, Double minMag, Double maxMag,
                                              Integer limit, String eventId, Double lat, Double lon, Double maxRadius);
+
+  void broadcastLiveEvent(EarthquakeRecord earthquakeRecord);
+
+  Multi<EarthquakeRecord> getLiveStream();
+
 }

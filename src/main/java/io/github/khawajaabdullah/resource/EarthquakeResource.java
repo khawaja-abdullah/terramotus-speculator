@@ -3,6 +3,7 @@ package io.github.khawajaabdullah.resource;
 import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
 import io.github.khawajaabdullah.service.EarthquakeService;
 import io.github.khawajaabdullah.util.Constant;
+import io.smallrye.mutiny.Multi;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -38,6 +39,13 @@ public class EarthquakeResource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<EarthquakeRecord> findAll(@QueryParam("pageNumber") Integer pageNumber, @QueryParam("pageSize") Integer pageSize) {
     return earthquakeService.findAll(pageNumber, pageSize);
+  }
+
+  @GET
+  @Path("/live")
+  @Produces(MediaType.SERVER_SENT_EVENTS)
+  public Multi<EarthquakeRecord> getLiveStream() {
+    return earthquakeService.getLiveStream();
   }
 
 }

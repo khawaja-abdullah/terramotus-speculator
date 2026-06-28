@@ -22,7 +22,7 @@ public class LiveEarthquakeEventsHandler {
   public void persistAndBroadcast(FeatureMessage featureMessage) {
     EarthquakeRecord earthquakeRecord = earthquakeMapper.mapFeatureToEarthquakeDto(featureMessage.feature());
     managedExecutor.runAsync(() -> earthquakeService.upsert(earthquakeRecord));
-    // TODO: Broadcast SSE
+    earthquakeService.broadcastLiveEvent(earthquakeRecord);
   }
 
 }
