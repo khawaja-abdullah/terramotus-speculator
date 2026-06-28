@@ -23,5 +23,4 @@ public class SeismicPortalWebSocketClient {
     earthquakeLiveEventDispatcher.persistAndBroadcast(featureMessage);
   }
 
-
 }
