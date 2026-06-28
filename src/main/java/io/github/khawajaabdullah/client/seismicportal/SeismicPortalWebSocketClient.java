@@ -1,7 +1,7 @@
 package io.github.khawajaabdullah.client.seismicportal;
 
 import io.github.khawajaabdullah.dto.seismicportal.FeatureMessage;
-import io.github.khawajaabdullah.service.EarthquakeLiveEventDispatcher;
+import io.github.khawajaabdullah.service.LiveEarthquakeEventsHandler;
 import io.quarkus.websockets.next.OnTextMessage;
 import io.quarkus.websockets.next.WebSocketClient;
 import org.jboss.logging.Logger;
@@ -11,16 +11,16 @@ public class SeismicPortalWebSocketClient {
 
   private static final Logger LOGGER = Logger.getLogger(SeismicPortalWebSocketClient.class);
 
-  private final EarthquakeLiveEventDispatcher earthquakeLiveEventDispatcher;
+  private final LiveEarthquakeEventsHandler liveEarthquakeEventsHandler;
 
-  public SeismicPortalWebSocketClient(EarthquakeLiveEventDispatcher earthquakeLiveEventDispatcher) {
-    this.earthquakeLiveEventDispatcher = earthquakeLiveEventDispatcher;
+  public SeismicPortalWebSocketClient(LiveEarthquakeEventsHandler liveEarthquakeEventsHandler) {
+    this.liveEarthquakeEventsHandler = liveEarthquakeEventsHandler;
   }
 
   @OnTextMessage
   void onTextMessage(FeatureMessage featureMessage) {
     LOGGER.infof("Message received from Seismic Portal socket: %s", featureMessage);
-    earthquakeLiveEventDispatcher.persistAndBroadcast(featureMessage);
+    liveEarthquakeEventsHandler.persistAndBroadcast(featureMessage);
   }
 
 }

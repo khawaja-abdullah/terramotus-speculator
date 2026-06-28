@@ -11,15 +11,13 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 @ApplicationScoped
-public class EarthquakeHistoricalPoller {
+public class HistoricalEarthquakeEventsHandler {
 
-  private static final Logger LOGGER = Logger.getLogger(EarthquakeHistoricalPoller.class);
+  private static final Logger LOGGER = Logger.getLogger(HistoricalEarthquakeEventsHandler.class);
 
-  private final SeismicPortalService seismicPortalService;
   private final EarthquakeService earthquakeService;
 
-  public EarthquakeHistoricalPoller(SeismicPortalService seismicPortalService, EarthquakeService earthquakeService) {
-    this.seismicPortalService = seismicPortalService;
+  public HistoricalEarthquakeEventsHandler(EarthquakeService earthquakeService) {
     this.earthquakeService = earthquakeService;
   }
 
@@ -27,7 +25,7 @@ public class EarthquakeHistoricalPoller {
   void syncRecentEvents() {
     LOGGER.info("Polling earthquake events...");
     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    List<EarthquakeRecord> earthquakeRecords = seismicPortalService.getHistoricalEvents(
+    List<EarthquakeRecord> earthquakeRecords = earthquakeService.getHistoricalEvents(
         now.minusHours(5).format(Constant.ISO_ZULU_LOCAL_DATE_TIME),
         now.format(Constant.ISO_ZULU_LOCAL_DATE_TIME)
     );

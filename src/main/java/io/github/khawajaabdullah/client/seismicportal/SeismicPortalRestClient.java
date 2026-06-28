@@ -9,7 +9,7 @@ import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "seismic-portal-api")
-public interface SeismicPortalClient {
+public interface SeismicPortalRestClient {
 
   @GET
   @Path("/fdsnws/event/1/query")

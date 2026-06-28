@@ -2,7 +2,7 @@ package io.github.khawajaabdullah.resource;
 
 import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
 import io.github.khawajaabdullah.service.EarthquakeService;
-import io.github.khawajaabdullah.service.SeismicPortalService;
+import io.github.khawajaabdullah.util.Constant;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -11,18 +11,17 @@ import java.util.List;
 @Path("/earthquakes")
 public class EarthquakeResource {
 
-  private final SeismicPortalService seismicPortalService;
   private final EarthquakeService earthquakeService;
 
-  public EarthquakeResource(SeismicPortalService seismicPortalService, EarthquakeService earthquakeService) {
-    this.seismicPortalService = seismicPortalService;
+  public EarthquakeResource(EarthquakeService earthquakeService) {
     this.earthquakeService = earthquakeService;
   }
 
   @GET
   @Path("/historical")
   @Produces(MediaType.APPLICATION_JSON)
-  public List<EarthquakeRecord> getHistoricalEvents(@QueryParam("format") @DefaultValue("json") String format,
+  public List<EarthquakeRecord> getHistoricalEvents(@QueryParam("format")
+                                                    @DefaultValue(Constant.SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON) String format,
                                                     @QueryParam("start") String start,
                                                     @QueryParam("end") String end,
                                                     @QueryParam("minmag") Double minMag,
@@ -32,7 +31,7 @@ public class EarthquakeResource {
                                                     @QueryParam("lat") Double lat,
                                                     @QueryParam("lon") Double lon,
                                                     @QueryParam("maxradius") Double maxRadius) {
-    return seismicPortalService.getHistoricalEvents(format, start, end, minMag, maxMag, limit, eventId, lat, lon, maxRadius);
+    return earthquakeService.getHistoricalEvents(format, start, end, minMag, maxMag, limit, eventId, lat, lon, maxRadius);
   }
 
   @GET
