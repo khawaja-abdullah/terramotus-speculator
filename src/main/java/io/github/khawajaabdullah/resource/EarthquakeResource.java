@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Path("/earthquakes")
+@Path("/v1/earthquakes")
 public class EarthquakeResource {
 
   private final EarthquakeService earthquakeService;

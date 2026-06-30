@@ -16,7 +16,7 @@ class EarthquakeResourceTest {
   @Test
   void shouldGetHistoricalEarthquakeEvents() {
     given()
-        .when().get("/earthquakes/historical?format=json&limit=10")
+        .when().get("/api/v1/earthquakes/historical?format=json&limit=10")
         .then()
         .statusCode(RestResponse.StatusCode.OK)
         .extract().as(new TypeRef<List<EarthquakeRecord>>() {
@@ -26,7 +26,7 @@ class EarthquakeResourceTest {
   @Test
   void shouldFindAllEarthquakes() {
     given()
-        .when().get("/earthquakes")
+        .when().get("/api/v1/earthquakes")
         .then()
         .statusCode(RestResponse.StatusCode.OK)
         .extract().as(new TypeRef<List<EarthquakeRecord>>() {
@@ -36,7 +36,7 @@ class EarthquakeResourceTest {
   @Test
   void shouldFindAllEarthquakesPaginated() {
     given()
-        .when().get("/earthquakes?pageNumber=0&pageSize=10")
+        .when().get("/api/v1/giearthquakes?pageNumber=0&pageSize=10")
         .then()
         .statusCode(RestResponse.StatusCode.OK)
         .extract().as(new TypeRef<List<EarthquakeRecord>>() {
