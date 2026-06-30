@@ -17,6 +17,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,6 +82,21 @@ public class EarthquakeServiceImpl implements EarthquakeService {
         .toList();
   }
 
+  public int backfillGap() {
+    LocalDateTime from = earthquakeRepository.getMaxTime();
+    LocalDateTime to = LocalDateTime.now(ZoneOffset.UTC);
+    if (from == null) {
+      from = to.minusHours(24); // TODO: configurable
+    }
+    List<EarthquakeRecord> earthquakeRecords = getHistoricalEvents(
+        from.format(Constant.ISO_ZULU_LOCAL_DATE_TIME),
+        to.format(Constant.ISO_ZULU_LOCAL_DATE_TIME)
+    );
+    upsertMultiple(earthquakeRecords);
+    return earthquakeRecords.size();
+  }
+
+
   @Override
   public List<EarthquakeRecord> getHistoricalEvents(String start, String end) {
     return getHistoricalEvents(Constant.SEISMIC_PORTAL_API_RESPONSE_FORMAT_JSON, start, end, null, null, null, null, null, null, null);
@@ -97,13 +113,14 @@ public class EarthquakeServiceImpl implements EarthquakeService {
         .toList();
   }
 
+
   @Override
-  public void broadcastLiveEvent(EarthquakeRecord earthquakeRecord) {
+  public void broadcast(EarthquakeRecord earthquakeRecord) {
     earthquakeRecordBroadcastProcessor.onNext(earthquakeRecord);
   }
 
   @Override
-  public Multi<EarthquakeRecord> getLiveEvents() {
+  public Multi<EarthquakeRecord> getStream() {
     return earthquakeRecordBroadcastProcessor;
   }
 

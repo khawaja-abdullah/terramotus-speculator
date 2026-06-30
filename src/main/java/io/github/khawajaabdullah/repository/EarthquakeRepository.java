@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.hibernate.StatelessSession;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -25,6 +26,13 @@ public class EarthquakeRepository implements PanacheRepositoryBase<EarthquakeEnt
   @Transactional
   public void upsertMultiple(List<EarthquakeEntity> entities) {
     statelessSession.upsertMultiple(entities);
+  }
+
+  @Transactional
+  public LocalDateTime getMaxTime() {
+    return (LocalDateTime) getEntityManager()
+        .createQuery("SELECT MAX(e.time) FROM EarthquakeEntity e")
+        .getSingleResult();
   }
 
 }

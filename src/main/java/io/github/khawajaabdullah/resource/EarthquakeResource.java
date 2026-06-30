@@ -46,10 +46,10 @@ public class EarthquakeResource {
   }
 
   @GET
-  @Path("/live")
+  @Path("/subscribe")
   @Produces(MediaType.SERVER_SENT_EVENTS)
-  public Multi<EarthquakeRecord> getLiveEvents() {
-    return earthquakeService.getLiveEvents();
+  public Multi<EarthquakeRecord> subscribe() {
+    return earthquakeService.getStream();
   }
 
 }

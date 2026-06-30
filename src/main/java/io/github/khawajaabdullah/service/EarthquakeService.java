@@ -14,13 +14,17 @@ public interface EarthquakeService {
 
   List<EarthquakeRecord> getAll(LocalDateTime startTime, LocalDateTime endTime, Integer pageNumber, Integer pageSize);
 
+  int backfillGap();
+
+
   List<EarthquakeRecord> getHistoricalEvents(String start, String end);
 
   List<EarthquakeRecord> getHistoricalEvents(String format, String start, String end, Double minMag, Double maxMag,
                                              Integer limit, String eventId, Double lat, Double lon, Double maxRadius);
 
-  void broadcastLiveEvent(EarthquakeRecord earthquakeRecord);
 
-  Multi<EarthquakeRecord> getLiveEvents();
+  void broadcast(EarthquakeRecord earthquakeRecord);
+
+  Multi<EarthquakeRecord> getStream();
 
 }
