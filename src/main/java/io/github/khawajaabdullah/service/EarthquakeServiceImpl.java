@@ -1,7 +1,7 @@
 package io.github.khawajaabdullah.service;
 
 import io.github.khawajaabdullah.client.seismicportal.SeismicPortalRestClient;
-import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.dto.EarthquakeRecord;
 import io.github.khawajaabdullah.dto.seismicportal.FeatureCollection;
 import io.github.khawajaabdullah.entity.EarthquakeEntity;
 import io.github.khawajaabdullah.mapper.EarthquakeMapper;

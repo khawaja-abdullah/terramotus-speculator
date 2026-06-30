@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah.mapper;
 
-import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.dto.EarthquakeRecord;
 import io.github.khawajaabdullah.dto.seismicportal.Feature;
 import io.github.khawajaabdullah.dto.seismicportal.Properties;
 import io.github.khawajaabdullah.entity.EarthquakeEntity;

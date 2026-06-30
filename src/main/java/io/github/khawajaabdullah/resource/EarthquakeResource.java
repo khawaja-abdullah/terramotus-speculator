@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah.resource;
 
-import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.dto.EarthquakeRecord;
 import io.github.khawajaabdullah.service.EarthquakeService;
 import io.github.khawajaabdullah.util.Constant;
 import io.smallrye.mutiny.Multi;

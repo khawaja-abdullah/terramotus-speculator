@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah;
 
-import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.dto.EarthquakeRecord;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.common.mapper.TypeRef;
 import org.jboss.resteasy.reactive.RestResponse;

@@ -1,6 +1,6 @@
 package io.github.khawajaabdullah.service;
 
-import io.github.khawajaabdullah.dto.response.EarthquakeRecord;
+import io.github.khawajaabdullah.dto.EarthquakeRecord;
 import io.smallrye.mutiny.Multi;
 
 import java.time.LocalDateTime;
