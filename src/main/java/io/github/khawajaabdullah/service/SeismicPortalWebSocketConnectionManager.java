@@ -21,8 +21,12 @@ public class SeismicPortalWebSocketConnectionManager {
   private final WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector;
   private final EarthquakeService earthquakeService;
   private final Vertx vertx;
-  private final ApplicationProperties applicationProperties;
-  private volatile boolean shuttingDown = false;
+
+  private final String seismicPortalDomain;
+  private final long retryDelay;
+
+  private volatile WebSocketClientConnection currentWebSocketClientConnection;
+  private volatile boolean shuttingDown;
 
   public SeismicPortalWebSocketConnectionManager(WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector,
                                                  EarthquakeService earthquakeService,
@@ -31,7 +35,8 @@ public class SeismicPortalWebSocketConnectionManager {
     this.seismicPortalWebSocketClientWebSocketConnector = seismicPortalWebSocketClientWebSocketConnector;
     this.earthquakeService = earthquakeService;
     this.vertx = vertx;
-    this.applicationProperties = applicationProperties;
+    this.seismicPortalDomain = applicationProperties.client().seismicPortal().domain();
+    this.retryDelay = applicationProperties.webSocket().seismicPortal().retryDelay();
   }
 
   void onStartup(@Observes StartupEvent startupEvent) {
@@ -40,41 +45,46 @@ public class SeismicPortalWebSocketConnectionManager {
 
   void onShutdown(@Observes ShutdownEvent shutdownEvent) {
     shuttingDown = true;
+    if (currentWebSocketClientConnection != null && currentWebSocketClientConnection.isOpen()) {
+      currentWebSocketClientConnection.closeAndAwait();
+    }
   }
 
   public void backfillAndConnect() {
     if (shuttingDown) return;
     vertx.executeBlocking(earthquakeService::backfillGap)
-        .onSuccess(this::onBackfillSuccess)
-        .onFailure(this::onBackfillFailure);
+        .onSuccess(this::handleBackfillSuccess)
+        .onFailure(this::handleBackfillFailure);
   }
 
-  private void onBackfillSuccess(int count) {
+  private void handleBackfillSuccess(int count) {
     LOGGER.infof("Backfilled %d events", count);
     connect();
   }
 
-  private void onBackfillFailure(Throwable throwable) {
+  private void handleBackfillFailure(Throwable throwable) {
     LOGGER.errorf("Backfill failed with error=%s, retrying...", throwable.getMessage());
-    vertx.setTimer(Long.parseLong(applicationProperties.webSocket().seismicPortal().retryDelay()), ignored -> backfillAndConnect());
+    vertx.setTimer(retryDelay, ignored -> backfillAndConnect());
   }
 
   private void connect() {
     if (shuttingDown) return;
     seismicPortalWebSocketClientWebSocketConnector
-        .baseUri(URI.create("wss://%s".formatted(applicationProperties.client().seismicPortal().domain())))
+        .baseUri(URI.create("wss://%s".formatted(seismicPortalDomain)))
         .connect()
         .subscribe()
-        .with(this::onConnectSuccess, this::onConnectFailure);
+        .with(this::handleConnectSuccess, this::handleConnectFailure);
   }
 
-  private void onConnectSuccess(WebSocketClientConnection webSocketClientConnection) {
+  private void handleConnectSuccess(WebSocketClientConnection webSocketClientConnection) {
     LOGGER.infof("Connection to web socket successful! connectionId: %s", webSocketClientConnection.id());
+    currentWebSocketClientConnection = webSocketClientConnection;
   }
 
-  private void onConnectFailure(Throwable throwable) {
+  private void handleConnectFailure(Throwable throwable) {
     LOGGER.errorf("Connection to web socket failed with error=%s, retrying...", throwable.getMessage());
-    vertx.setTimer(Long.parseLong(applicationProperties.webSocket().seismicPortal().retryDelay()), ignored -> connect());
+    currentWebSocketClientConnection = null;
+    vertx.setTimer(retryDelay, ignored -> backfillAndConnect());
   }
 
 }

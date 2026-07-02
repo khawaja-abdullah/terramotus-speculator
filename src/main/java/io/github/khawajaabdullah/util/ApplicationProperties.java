@@ -26,7 +26,7 @@ public interface ApplicationProperties {
 
     interface SeismicPortal {
 
-      String retryDelay();
+      long retryDelay();
 
     }
 

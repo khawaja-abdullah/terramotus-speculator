@@ -45,7 +45,6 @@ public class SeismicPortalWebSocketClient {
   @OnError
   void onError(WebSocketClientConnection webSocketClientConnection, Throwable throwable) {
     LOGGER.errorf("Error encountered with web socket connection! connectionId=%s, error=%s", webSocketClientConnection.id(), throwable.getMessage());
-    seismicPortalWebSocketConnectionManager.backfillAndConnect();
   }
 
   @OnClose
