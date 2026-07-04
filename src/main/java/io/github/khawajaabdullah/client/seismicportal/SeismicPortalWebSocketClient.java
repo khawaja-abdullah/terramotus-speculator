@@ -9,6 +9,11 @@ import io.github.khawajaabdullah.util.Constant;
 import io.quarkus.websockets.next.*;
 import org.jboss.logging.Logger;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.concurrent.atomic.AtomicReference;
+
 @WebSocketClient(path = "/standing_order/websocket")
 public class SeismicPortalWebSocketClient {
 
@@ -17,6 +22,8 @@ public class SeismicPortalWebSocketClient {
   private final EarthquakeMapper earthquakeMapper;
   private final EarthquakeService earthquakeService;
   private final SeismicPortalWebSocketConnectionManager seismicPortalWebSocketConnectionManager;
+
+  private final AtomicReference<LocalDateTime> latestSeen = new AtomicReference<>(LocalDateTime.now(ZoneOffset.UTC));
 
   public SeismicPortalWebSocketClient(EarthquakeMapper earthquakeMapper,
                                       EarthquakeService earthquakeService,
@@ -35,11 +42,14 @@ public class SeismicPortalWebSocketClient {
   void onMessage(FeatureMessage featureMessage) {
     LOGGER.infof("Message received from web socket: %s", featureMessage);
     EarthquakeRecord earthquakeRecord = earthquakeMapper.mapFeatureToEarthquakeDto(featureMessage.feature());
-    earthquakeService.upsert(earthquakeRecord);
-    // TODO: replace with pub/sub stream
     if (Constant.FEATURE_MESSAGE_ACTION_CREATE.equals(featureMessage.action())) {
-      earthquakeService.broadcast(earthquakeRecord);
+      LocalDateTime currentEventTime = OffsetDateTime.parse(earthquakeRecord.time()).toLocalDateTime();
+      if (currentEventTime.isAfter(latestSeen.get())) {
+        latestSeen.set(currentEventTime);
+        earthquakeService.broadcast(earthquakeRecord);
+      }
     }
+    earthquakeService.upsert(earthquakeRecord);
   }
 
   @OnError
