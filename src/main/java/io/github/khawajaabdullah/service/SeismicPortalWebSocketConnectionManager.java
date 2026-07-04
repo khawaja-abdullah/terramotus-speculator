@@ -47,6 +47,7 @@ public class SeismicPortalWebSocketConnectionManager {
     shuttingDown = true;
     if (currentWebSocketClientConnection != null && currentWebSocketClientConnection.isOpen()) {
       currentWebSocketClientConnection.closeAndAwait();
+      currentWebSocketClientConnection = null;
     }
   }
 
