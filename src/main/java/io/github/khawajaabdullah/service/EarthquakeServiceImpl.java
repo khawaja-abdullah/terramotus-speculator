@@ -6,6 +6,7 @@ import io.github.khawajaabdullah.dto.seismicportal.FeatureCollection;
 import io.github.khawajaabdullah.entity.EarthquakeEntity;
 import io.github.khawajaabdullah.mapper.EarthquakeMapper;
 import io.github.khawajaabdullah.repository.EarthquakeRepository;
+import io.github.khawajaabdullah.util.ApplicationProperties;
 import io.github.khawajaabdullah.util.Constant;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
@@ -30,12 +31,14 @@ public class EarthquakeServiceImpl implements EarthquakeService {
   private final EarthquakeRepository earthquakeRepository;
   private final SeismicPortalRestClient seismicPortalRestClient;
   private final BroadcastProcessor<EarthquakeRecord> earthquakeRecordBroadcastProcessor = BroadcastProcessor.create();
+  private final ApplicationProperties applicationProperties;
 
   public EarthquakeServiceImpl(EarthquakeMapper earthquakeMapper, EarthquakeRepository earthquakeRepository,
-                               @RestClient SeismicPortalRestClient seismicPortalRestClient) {
+                               @RestClient SeismicPortalRestClient seismicPortalRestClient, ApplicationProperties applicationProperties) {
     this.earthquakeMapper = earthquakeMapper;
     this.earthquakeRepository = earthquakeRepository;
     this.seismicPortalRestClient = seismicPortalRestClient;
+    this.applicationProperties = applicationProperties;
   }
 
   @Override
@@ -86,7 +89,7 @@ public class EarthquakeServiceImpl implements EarthquakeService {
     LocalDateTime from = earthquakeRepository.getMaxTime();
     LocalDateTime to = LocalDateTime.now(ZoneOffset.UTC);
     if (from == null) {
-      from = to.minusHours(24); // TODO: configurable
+      from = to.minusHours(applicationProperties.webSocket().seismicPortal().backfillHours());
     }
     List<EarthquakeRecord> earthquakeRecords = getHistoricalEvents(
         from.format(Constant.ISO_ZULU_LOCAL_DATE_TIME),

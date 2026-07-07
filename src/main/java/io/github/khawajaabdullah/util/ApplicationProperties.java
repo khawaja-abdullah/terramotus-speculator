@@ -27,6 +27,7 @@ public interface ApplicationProperties {
     interface SeismicPortal {
 
       long retryDelay();
+      long backfillHours();
 
     }
 
