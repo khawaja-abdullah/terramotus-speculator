@@ -12,6 +12,7 @@ import jakarta.enterprise.event.Observes;
 import org.jboss.logging.Logger;
 
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ApplicationScoped
 public class SeismicPortalWebSocketConnectionManager {
@@ -25,7 +26,7 @@ public class SeismicPortalWebSocketConnectionManager {
   private final String seismicPortalDomain;
   private final long retryDelay;
 
-  private volatile WebSocketClientConnection currentWebSocketClientConnection;
+  private final AtomicReference<WebSocketClientConnection> currentWebSocketClientConnectionAtomicReference = new AtomicReference<>();
   private volatile boolean shuttingDown;
 
   public SeismicPortalWebSocketConnectionManager(WebSocketConnector<SeismicPortalWebSocketClient> seismicPortalWebSocketClientWebSocketConnector,
@@ -45,9 +46,9 @@ public class SeismicPortalWebSocketConnectionManager {
 
   void onShutdown(@Observes ShutdownEvent shutdownEvent) {
     shuttingDown = true;
-    if (currentWebSocketClientConnection != null && currentWebSocketClientConnection.isOpen()) {
-      currentWebSocketClientConnection.closeAndAwait();
-      currentWebSocketClientConnection = null;
+    if (currentWebSocketClientConnectionAtomicReference.get() != null && currentWebSocketClientConnectionAtomicReference.get().isOpen()) {
+      currentWebSocketClientConnectionAtomicReference.get().closeAndAwait();
+      currentWebSocketClientConnectionAtomicReference.set(null);
     }
   }
 
@@ -79,12 +80,12 @@ public class SeismicPortalWebSocketConnectionManager {
 
   private void handleConnectSuccess(WebSocketClientConnection webSocketClientConnection) {
     LOGGER.infof("Connection to web socket successful! connectionId: %s", webSocketClientConnection.id());
-    currentWebSocketClientConnection = webSocketClientConnection;
+    currentWebSocketClientConnectionAtomicReference.set(webSocketClientConnection);
   }
 
   private void handleConnectFailure(Throwable throwable) {
     LOGGER.errorf("Connection to web socket failed with error=%s, retrying...", throwable.getMessage());
-    currentWebSocketClientConnection = null;
+    currentWebSocketClientConnectionAtomicReference.set(null);
     vertx.setTimer(retryDelay, ignored -> backfillAndConnect());
   }
 
